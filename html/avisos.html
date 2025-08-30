@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Form Validation</title>
+    <link rel="stylesheet" type="text/css" href="./styles.css">
+</head>
+<body>
+    <form name="myForm" method="post" enctype="multipart/form-data"></form>
+        <div class="lugar">
+            <label for="select-region">Región</label>
+            <select name="select-region" id="select-region" required>
+                <option value="">Seleccione una región</option>
+            </select><br>
+
+            <label for="select-comuna">Comuna</label>
+            <select name="select-comuna" id="select-comuna" required>
+                <option value="">Seleccione una comuna</option>
+            </select><br>
+
+            <label for="sector">Sector</label>
+                <input type="sector" name="sector" id="sector" maxlength="100"><br>
+        </div>    
+        <div class="contacto">
+            <label for="nombre">Nombre</label>
+            <input type="nombre" name="nombre" id="nombre" minlength="3" maxlength="200"><br>
+
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" maxlength="100" required><br>
+
+            <label for="tel">Celular</label>
+            <input type="tel" name="tel" id="tel"><br>
+
+            <label for="select-contacto">Contactar por</label>
+            <select name="select-contacto" id="select-contacto">
+                <option value="">Seleccione una red social</option>
+            </select><br>
+
+            <label for="info-contacto" style="display: none;">Url o id</label>
+            <input type="red-social" name="red-social" id="red-social" minlength="4" maxlength="50" style="display: none;"><br>
+        </div>
+        <div class="info">
+            <label for="select-mascota">Tipo de mascota</label>
+            <select name="select-mascota" id="select-mascota" required>
+                <option value="">Seleccione un tipo</option>
+            </select><br>
+
+            <label for="cantidad">Cantidad</label>
+            <input type="number" name="cantidad" id="cantidad" minlength="1"><br>
+
+            <label for="edad">Edad</label>
+            <input type="number" name="edad" id="edad" minlength="1"><br>
+
+            <label for="select-unidad">Unidad de medida de edad</label>
+            <select name="select-unidad" id="select-unidad" required>
+                <option value="">Seleccione una opción</option>
+            </select><br>
+
+            <label for="fecha">Fecha de entrega</label><!-- se pone la fecha actual en "value" y el min en js -->
+            <input type="datetime-local" name="fecha" id="fecha"><br>
+
+            <label for="descripcion">Descripción</label>
+            <textarea name="descripcion" id="descripcion" rows="10" cols="50"></textarea><br>
+
+            <label for="files">Pictures</label>
+            <input type="file" name="files" id="files" multiple accept="image/*"><br>
+
+        </div>
+    </form>
+    <script src="../js/select.js"></script>
+    <script src="../js/validation.js"></script>
+</body>
+</html>
