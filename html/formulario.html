@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Form Validation</title>
+	<title>Formulario</title>
     <link rel="stylesheet" type="text/css" href="./styles.css">
 </head>
 <body>
-    <form name="myForm" method="post" enctype="multipart/form-data"></form>
+    <div id="val-box" hidden>
+        <h2 id="val-msg"></h2>
+        <ul id="val-list"></ul>
+    </div>
+    <form name="myForm" method="post" enctype="multipart/form-data">
         <div class="lugar">
             <label for="select-region">Región</label>
             <select name="select-region" id="select-region" required>
@@ -30,40 +34,41 @@
             <label for="tel">Celular</label>
             <input type="tel" name="tel" id="tel"><br>
 
-            <label for="select-contacto">Contactar por</label>
-            <select name="select-contacto" id="select-contacto">
-                <option value="">Seleccione una red social</option>
-            </select><br>
-
-            <label for="info-contacto" style="display: none;">Url o id</label>
-            <input type="red-social" name="red-social" id="red-social" minlength="4" maxlength="50" style="display: none;"><br>
+            <div id="redes"></div>
+            <button type="button" id="agregar-contacto">+</button>
         </div>
-        <div class="info">
+        <div id="info">
             <label for="select-mascota">Tipo de mascota</label>
             <select name="select-mascota" id="select-mascota" required>
                 <option value="">Seleccione un tipo</option>
             </select><br>
 
             <label for="cantidad">Cantidad</label>
-            <input type="number" name="cantidad" id="cantidad" minlength="1"><br>
+            <input type="number" name="cantidad" id="cantidad" min="1" required><br>
 
             <label for="edad">Edad</label>
-            <input type="number" name="edad" id="edad" minlength="1"><br>
+            <input type="number" name="edad" id="edad" min="1" required><br>
 
             <label for="select-unidad">Unidad de medida de edad</label>
             <select name="select-unidad" id="select-unidad" required>
                 <option value="">Seleccione una opción</option>
             </select><br>
 
-            <label for="fecha">Fecha de entrega</label><!-- se pone la fecha actual en "value" y el min en js -->
+            <label for="fecha">Fecha de entrega</label>
             <input type="datetime-local" name="fecha" id="fecha"><br>
 
             <label for="descripcion">Descripción</label>
             <textarea name="descripcion" id="descripcion" rows="10" cols="50"></textarea><br>
-
-            <label for="files">Pictures</label>
-            <input type="file" name="files" id="files" multiple accept="image/*"><br>
-
+            <div id="imagenes">
+                <label for="fotos">Fotos</label>
+                <input type="file" name="fotos" id="fotos"><br>
+            </div>
+            <button type="button" id="agregar-foto">+</button>
+        </div>
+        <div>
+            <button type="button" id="envio">
+                Agregar aviso
+            </button>
         </div>
     </form>
     <script src="../js/select.js"></script>
