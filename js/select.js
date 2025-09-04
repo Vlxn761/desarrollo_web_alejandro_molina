@@ -90,6 +90,11 @@ let region_comuna = {
   ]
 };
 
+let tipo_mascotas = ["Perro", "Gato"];
+
+let tipo_medida = ["Meses", "Años"];
+
+let tipo_red = ["Whatsapp", "Telegram", "Instagram", "X", "TikTok", "Otra"];
 
 const poblarRegiones = () => {
   let regionesSelect = document.getElementById("select-region");
@@ -98,6 +103,26 @@ const poblarRegiones = () => {
       option.value = region;
       option.text = region;
       regionesSelect.appendChild(option);
+  }
+};
+
+const poblarMascotas = () => {
+  let mascotaSelect = document.getElementById("select-mascota");
+  for (const mascota of tipo_mascotas) {
+      let option = document.createElement("option");
+      option.value = mascota;
+      option.text = mascota;
+      mascotaSelect.appendChild(option);
+  }
+};
+
+const poblarUnidades = () => {
+  let unidadSelect = document.getElementById("select-unidad");
+  for (const unidad of tipo_medida) {
+      let option = document.createElement("option");
+      option.value = unidad;
+      option.text = unidad;
+      unidadSelect.appendChild(option);
   }
 };
 
@@ -118,8 +143,133 @@ const updateComunas = () => {
   }
 };
 
+const rellenarFecha = () => {
+  let fechaInput = document.getElementById("fecha");
+  let fecha = new Date();
+
+  fecha.setHours(fecha.getHours() + 3);
+
+  // padStart rellena con "0" el segundo dígito cuando el número recibido es de 1 dígito
+  const year = fecha.getFullYear();
+  const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+  const dia = String(fecha.getDate()).padStart(2, "0");
+  const hora = String(fecha.getHours()).padStart(2, "0");
+  const minutos = String(fecha.getMinutes()).padStart(2, "0");
+
+  // Formato aaaa-mm-ddThh:mm
+  fechaInput.value = `${year}-${mes}-${dia}T${hora}:${minutos}`;
+}
+
+const addFotos = () => {
+  let div = document.getElementById("imagenes");
+  let fotos = div.querySelectorAll("input");
+
+  let lengthValid = 1 <= fotos.length && fotos.length <= 4; // Máximo 5 fotos
+
+  if (lengthValid) {
+    // Se crea un nuevo input
+    let input = document.createElement("input");
+    input.type = "file";
+    input.name = "fotos" + (fotos.length+1); 
+    input.id = "fotos" + (fotos.length+1); 
+    div.appendChild(input);
+    div.appendChild(document.createElement("br"));
+  }
+  if (fotos.length == 4) {
+    // Se esconde el botón al agregar el quinto input
+    let addBtn = document.getElementById("agregar-foto");
+    addBtn.style = "display: none;";
+  }
+  
+};
+
+const addContacto = () => {
+  let div = document.getElementById("redes");
+  let contactos = div.querySelectorAll("div");
+
+  let lengthValid = 0 <= contactos.length && contactos.length <= 4; // Máximo 5 contactos
+
+  if (lengthValid) {
+    // Se crea un bloque para el nuevo select
+    let bloque = document.createElement("div"); 
+    bloque.id = "bloque-contacto" + (contactos.length+1);
+
+    // Label para el select
+    let labelRed = document.createElement("label"); 
+
+    labelRed.for = "red-select-" + (contactos.length+1);
+    labelRed.innerHTML = "Contactar por ";
+
+    bloque.appendChild(labelRed);
+
+    // Se crea y pobla el nuevo select
+    let redSelect = document.createElement("select");
+    redSelect.innerHTML = '<option value="">Seleccione una red social</option>';
+    redSelect.id = "red-select-" + (contactos.length+1);
+
+    for (const red of tipo_red) {
+      let option = document.createElement("option");
+      option.value = red;
+      option.text = red;
+      redSelect.appendChild(option);
+    }
+
+    bloque.appendChild(redSelect);
+    bloque.appendChild(document.createElement("br"));
+
+    // Label para la caja de texto
+    let labelContacto = document.createElement("label"); 
+
+    labelContacto.for = "contacto";
+    labelContacto.style.display = "none";
+    labelContacto.innerHTML = "Url o id";
+
+    bloque.appendChild(labelContacto)
+
+    // Se crea el input, escondido hasta que se seleccione una opción
+    let input = document.createElement("input"); 
+    input.type = "contacto";
+    input.name = "contacto" + (contactos.length+1); 
+    input.id = "contacto" + (contactos.length+1); 
+    input.minLength = "4";
+    input.maxLength = "50"
+    input.style.display = "none";
+    bloque.appendChild(input);
+    
+    bloque.appendChild(document.createElement("br"));
+
+    // Se agrega una función tipo changeArguments (aux 4) para cada select
+    const select = bloque.querySelector("select");
+    const label = bloque.querySelector("label");
+    const textarea = bloque.querySelector("input");
+  
+    redSelect.addEventListener("change", () => {
+      if (select.value !== "") {
+        label.style.display = "block";
+        textarea.style.display = "block";
+      } else {
+        label.style.display = "none";
+        textarea.style.display = "none";
+      }
+    }) //fuente?!?!?! https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#getting_data_into_and_out_of_an_event_listener
+
+    div.appendChild(bloque);
+  } 
+  if (contactos.length == 4) {
+    // Se esconde el botón al llegar al quinto select
+    let addBtn = document.getElementById("agregar-contacto");
+    addBtn.style = "display: none;";
+  }
+};
+
 document.getElementById("select-region").addEventListener("change", updateComunas);
+document.getElementById("agregar-foto").addEventListener("click", addFotos);
+document.getElementById("agregar-contacto").addEventListener("click", addContacto);
 
 window.onload = () => {
   poblarRegiones();
+  poblarMascotas();
+  poblarUnidades();
+  addContacto();
+  rellenarFecha();
 };
