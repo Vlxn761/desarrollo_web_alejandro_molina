@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
 	<title>Formulario</title>
     <link rel="stylesheet" type="text/css" href="./styles.css">
 </head>
@@ -22,11 +23,11 @@
             </select><br>
 
             <label for="sector">Sector</label>
-                <input type="sector" name="sector" id="sector" maxlength="100"><br>
+                <input type="text" name="sector" id="sector" maxlength="100"><br>
         </div>    
         <div class="contacto">
             <label for="nombre">Nombre</label>
-            <input type="nombre" name="nombre" id="nombre" minlength="3" maxlength="200"><br>
+            <input type="text" name="nombre" id="nombre" minlength="3" maxlength="200"><br>
 
             <label for="email">Email</label>
             <input type="email" name="email" id="email" maxlength="100" required><br>
@@ -60,9 +61,11 @@
             <label for="descripcion">Descripción</label>
             <textarea name="descripcion" id="descripcion" rows="10" cols="50"></textarea><br>
             <div id="imagenes">
+                
                 <label for="fotos">Fotos</label>
                 <input type="file" name="fotos" id="fotos"><br>
             </div>
+            
             <button type="button" id="agregar-foto">+</button>
         </div>
         <div>
@@ -70,7 +73,8 @@
                 Agregar aviso
             </button>
         </div>
-    </form>
+        <button onclick="window.location.href='index.html'">Volver</button>
+    </form>    
     <script src="../js/select.js"></script>
     <script src="../js/validation.js"></script>
 </body>
