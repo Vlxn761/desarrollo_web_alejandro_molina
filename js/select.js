@@ -251,7 +251,7 @@ const addContacto = () => {
         label.style.display = "none";
         textarea.style.display = "none";
       }
-    }) //fuente?!?!?! https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#getting_data_into_and_out_of_an_event_listener
+    })
 
     div.appendChild(bloque);
   } 

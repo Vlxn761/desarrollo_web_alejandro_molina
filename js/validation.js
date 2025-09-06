@@ -1,61 +1,96 @@
+const validateSelect = (select) => {
+  if(!select) return false;
+  return true
+}
+
 const validateName = (name) => {
   if(!name) return false;
-  let lengthValid = name.trim().length >= 4;
+  let lengthValid = name.trim().length >= 3 && name.trim().length <= 200;
+  
+  return lengthValid;
+}
+
+const validateSector = (sector) => {
+  let lengthValid = sector.length <= 100;
   
   return lengthValid;
 }
 
 const validateEmail = (email) => {
   if (!email) return false;
-  let lengthValid = email.length > 15;
+  let lengthValid = email.length <= 100 ;
 
-  // validamos el formato
   let re = /^[\w.]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
   let formatValid = re.test(email);
 
-  // devolvemos la lógica AND de las validaciones.
   return lengthValid && formatValid;
 };
 
 const validatePhoneNumber = (phoneNumber) => {
-  if (!phoneNumber) return false;
-  // validación de longitud
-  let lengthValid = phoneNumber.length >= 8;
+  if (!phoneNumber) return true;
 
-  // validación de formato
-  let re = /^[0-9]+$/;
+  let re = /^\+\d{3}\.\d{8}$/;
   let formatValid = re.test(phoneNumber);
 
-  // devolvemos la lógica AND de las validaciones.
-  return lengthValid && formatValid;
+  return formatValid;
+};
+
+
+const validateContact = (bloque) => {
+  let bloques = bloque.querySelectorAll("div");
+
+  for (const bloqueContacto of bloques) {
+    let select = bloqueContacto.querySelector("select");
+    let largoInput = bloqueContacto.querySelector("input").value.length;  
+
+    if (validateSelect(select.value)) {
+      if (largoInput < 4 || largoInput > 50) return false;
+    }
+  } 
+  return true;
+};
+
+const validateInt = (num) => {
+  if(!num) return false;
+
+  let numValid = num >= 1;
+
+  let re = /^[1-9]\d*$/;
+  let typeValid = re.test(num);
+  
+  return numValid && typeValid;
 };
 
 const validateFiles = (files) => {
   if (!files) return false;
 
-  // validación del número de archivos
   let lengthValid = 1 <= files.length && files.length <= 3;
 
-  // validación del tipo de archivo
-  let typeValid = true;
-
-  for (const file of files) {
-    // el tipo de archivo debe ser "image/<foo>" o "application/pdf"
-    let fileFamily = file.type.split("/")[0];
-    typeValid &&= fileFamily == "image" || file.type == "application/pdf";
-  }
-
-  // devolvemos la lógica AND de las validaciones.
-  return lengthValid && typeValid;
+  return lengthValid;
 };
 
-const validateSelect = (select) => {
-  if(!select) return false;
-  return true
-}
+const validateDate = (fecha) => {
+  if (!fecha) return false;
+
+  let fechaInput = new Date(fecha); 
+  let fechaPrellenada = new Date();
+  fechaPrellenada.setHours(fechaPrellenada.getHours() + 3);
+
+  return fechaInput >= fechaPrellenada;
+};
+
+const validatePhotos = (fotos) => {
+  let lengthValid = true;
+
+  // Hay al menos una foto
+  for (const foto of fotos) {
+    lengthValid &&= !validateFiles(foto.files); 
+  }
+
+  return !lengthValid;
+};
 
 const validateForm = () => {
-  // obtener elementos del DOM usando el nombre del formulario.
   let myForm = document.forms["myForm"];
 
   let region = myForm["select-region"].value;
@@ -65,18 +100,15 @@ const validateForm = () => {
   let nombre = myForm["nombre"].value;
   let email = myForm["email"].value;
   let celular = myForm["tel"].value;
-  let red = myForm["select-red"].value;
-  let contacto = myForm["contacto"].value;
+  let contacto = document.getElementById("redes")
   
   let mascota = myForm["select-mascota"].value;
   let cantidad = myForm["cantidad"].value;
   let edad = myForm["edad"].value;
   let unidadMedida = myForm["select-unidad"].value;
   let fecha = myForm["fecha"].value;
-  let descripcion = myForm["descripcion"].value;
-  let files = myForm["contacto"].files;
+  let fotos = document.getElementById("imagenes").querySelectorAll("input");
 
-  // variables auxiliares de validación y función.
   let invalidInputs = [];
   let isValid = true;
   const setInvalidInput = (inputName) => {
@@ -84,7 +116,6 @@ const validateForm = () => {
     isValid &&= false;
   };
 
-  // lógica de validación
   if (!validateSelect(region)) {
     setInvalidInput("Región");
   }
@@ -94,119 +125,100 @@ const validateForm = () => {
   if (!validateSector(sector)) {
     setInvalidInput("Sector");
   }
-  if (!validateNombre(nombre)) {
+  if (!validateName(nombre)) {
     setInvalidInput("Nombre");
   }
   if (!validateEmail(email)) {
     setInvalidInput("Email");
   }
-  if (!validateCelular(celular)) {
+  if (!validatePhoneNumber(celular)) {
     setInvalidInput("Celular");
   }
-  if (!validateRed(red)) {
-    setInvalidInput("Red social");
-  }
-  if (!validateContacto(contacto)) {
+  if (!validateContact(contacto)) {
     setInvalidInput("Contacto");
   }
-  if (!validateMascota(mascota)) {
+  if (!validateSelect(mascota)) {
     setInvalidInput("Tipo de mascota");
   }
   if (!validateInt(cantidad)) {
     setInvalidInput("Cantidad de mascotas");
   }
-  if (!validateInt(Edad)) {
+  if (!validateInt(edad)) {
     setInvalidInput("Edad de mascotas");
   }
   if (!validateSelect(unidadMedida)) {
     setInvalidInput("Unidad de medida de edad");
   }
-  if (!validateFecha(fecha)) {
+  if (!validateDate(fecha)) {
     setInvalidInput("Fecha");
   }
-  if (!validateFiles(files)) {
+  if (!validatePhotos(fotos)) {
     setInvalidInput("Fotos");
   }
 
-  if (!validateName(name)) {
-    setInvalidInput("Nombre");
-  }
-  if (!validateEmail(email)) {
-    setInvalidInput("Email");
-  }
-  if (!validatePhoneNumber(phoneNumber)) {
-    setInvalidInput("Número");
-  }
-  if (!validateFiles(files)) {
-    setInvalidInput("Fotos");
-  }
-  if (!validateSelect(department)) {
-    setInvalidInput("Departamento");
-  }
-  if (!validateSelect(curso)) {
-    setInvalidInput("Curso");
-  }
-
-  // finalmente mostrar la validación
+  // del aux 3
   let validationBox = document.getElementById("val-box");
   let validationMessageElem = document.getElementById("val-msg");
   let validationListElem = document.getElementById("val-list");
-  let formContainer = document.querySelector(".main-container");
 
   if (!isValid) {
     validationListElem.textContent = "";
-    // agregar elementos inválidos al elemento val-list.
+    
     for (input of invalidInputs) {
       let listElement = document.createElement("li");
       listElement.innerText = input;
       validationListElem.append(listElement);
     }
-    // establecer val-msg
+    
     validationMessageElem.innerText = "Los siguientes campos son inválidos:";
 
-    // aplicar estilos de error
     validationBox.style.backgroundColor = "#ffdddd";
     validationBox.style.borderLeftColor = "#f44336";
 
-    // hacer visible el mensaje de validación
     validationBox.hidden = false;
   } else {
-    // Ocultar el formulario
     myForm.style.display = "none";
 
-    // establecer mensaje de éxito
     validationMessageElem.innerText = "¡Formulario válido! ¿Deseas enviarlo o volver?";
     validationListElem.textContent = "";
 
-    // aplicar estilos de éxito
     validationBox.style.backgroundColor = "#ddffdd";
     validationBox.style.borderLeftColor = "#4CAF50";
 
-    // Agregar botones para enviar el formulario o volver
     let submitButton = document.createElement("button");
     submitButton.innerText = "Enviar";
     submitButton.style.marginRight = "10px";
-    submitButton.addEventListener("click", () => {
-      // myForm.submit();
-      // no tenemos un backend al cual enviarle los datos
-    });
 
     let backButton = document.createElement("button");
     backButton.innerText = "Volver";
     backButton.addEventListener("click", () => {
-      // Mostrar el formulario nuevamente
       myForm.style.display = "block";
       validationBox.hidden = true;
+    });
+
+    submitButton.addEventListener("click", () => {
+      submitButton.style.display = "none";
+      backButton.style.display = "none"
+
+      validationMessageElem.innerText = "Hemos recibido la información de adopción, muchas gracias y suerte!";
+      
+      let portadaButton = document.createElement("button");
+      portadaButton.innerText = "Volver a la portada";
+
+      portadaButton.addEventListener("click", () => {
+       window.location.href = "../html/index.html";
+      });
+
+      validationListElem.appendChild(portadaButton);
     });
 
     validationListElem.appendChild(submitButton);
     validationListElem.appendChild(backButton);
 
-    // hacer visible el mensaje de validación
     validationBox.hidden = false;
   }
 };
 
 
-let submitBtn = document.getElementById("submit-btn");
+let submitBtn = document.getElementById("envio");
 submitBtn.addEventListener("click", validateForm);
