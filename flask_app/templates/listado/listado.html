@@ -1,0 +1,53 @@
+{% extends 'portada/base.html' %}
+{% block title %} Listado de adopciones {% endblock %}
+{% block css %}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{ url_for('static', filename='css/listado.css')}}"
+/>
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{ url_for('static', filename='css/tablas.css')}}"
+/>
+{% endblock %}
+{% block content %}
+  <h1>Listado de adopciones</h1>
+  {% if data %}
+  <table class="tabla-avisos">
+    <tr>
+      <th>Fecha Publicación</th>
+      <th>Fecha Entrega</th>
+      <th>Comuna</th>
+      <th>Sector</th>
+      <th>Cantidad tipo edad</th>
+      <th>Nombre Contacto</th>
+      <th>Total fotos</th>
+    </tr>
+    {% for aviso in data%}
+    <tr onclick="window.location.href='{{ url_for('informacion_aviso', id=aviso.id) }}';">
+      <td>{{aviso.fecha_publicacion}}</td>
+      <td>{{aviso.fecha_entrega}}</td>
+      <td>{{aviso.comuna}}</td>
+      <td>{{aviso.sector}}</td>
+      <td>{{aviso.detalles}}</td>
+      <td>{{aviso.nombre}}</td>
+      <td>{{aviso.total_fotos}}</td>
+    </tr>
+    {% endfor%}
+  </table>
+  {% if page > 1 %}
+    <a href="{{ url_for('listado', page=page-1) }}">Anterior</a>
+  {% endif %}
+    <span>Página {{ page }} de {{ total }}</span>
+  {% if page < total %}
+    <a href="{{ url_for('listado', page=page+1) }}">Siguiente</a>
+  {% endif %}
+
+  {% else %}
+    <p>Actualmente no hay avisos publicados</p>
+  {% endif %}
+  <a href="{{ url_for('index') }}">Volver</a>
+{% endblock %}
+{% block javascript %}{% endblock %}

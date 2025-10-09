@@ -1,0 +1,107 @@
+{% extends 'portada/base.html' %}
+{% block title %} Información de aviso {% endblock %}
+{% block css %}{% endblock %}
+{% block content %}
+<div class="lugar">
+    <table>
+    <tr>
+      <th>LUGAR</th>
+      <th></th>
+    </tr>
+    <tr>
+      <td>Región</td>
+      <td>{{data.region}}</td>
+    </tr>
+    <tr>
+      <td>Comuna</td>
+      <td>{{data.comuna}}</td>
+    </tr>
+    <tr>
+      <td>Sector</td>
+      <td>{{data.sector}}</td>
+    </tr>
+    </table>
+</div>    
+<div class="contacto">
+    <table>
+    <tr>
+      <th>CONTACTO</th>
+      <th></th>
+    </tr>
+    <tr>
+      <td>Nombre</td>
+      <td>{{data.nombre}}</td>
+    </tr>
+    <tr>
+      <td>Email</td>
+      <td>{{data.email}}</td>
+    </tr>
+    <tr>
+      <td>Celular</td>
+      <td>{{data.celular}}</td>
+    </tr>
+    <tr>
+        <td>Contactar por</td>
+        <td>
+        {% for c in data.contacto %}
+            {{ c.nombre }}:
+            {{ c.identificador }} <br>
+        {% endfor %}
+        </td>
+    </tr>
+    </table>
+</div>
+<div id="info">
+    <table>
+    <tr>
+      <th>INFORMACIÓN</th>
+      <th></th>
+    </tr>
+    <tr>
+      <td>Tipo de mascota</td>
+      <td>{{data.tipo}}</td>
+    </tr>
+    <tr>
+      <td>Cantidad</td>
+      <td>{{data.cantidad}}</td>
+    </tr>
+    <tr>
+      <td>Edad</td>
+      <td>{{data.edad}}</td>
+    </tr>
+    <tr>
+      <td>Unidad de medida</td>
+      <td>{{data.unidad}}</td>
+    </tr>
+    <tr>
+      <td>Fotos</td>
+          <tr>
+      <td>Foto</td>
+      <td>
+        <img id="foto" 
+             src="{{ url_for('static', filename='uploads/' + data.foto) }}" 
+             alt="Foto mascota" 
+             onclick="mostrarFoto(this)">
+        <div id="emergente" class="emergente">
+          <button id="cerrar" class="cerrar">Cerrar</button>
+          <img id="emergente-img" class="emergente-img" src="" alt="Imagen ampliada">
+        </div>
+      </td>
+    </tr>
+
+      <td>
+        <img id="myImg" src="{{ url_for('static', filename='uploads/' + data.foto) }}" alt="foto de la mascota" width="320" height="240">
+        <div id="myModal" class="modal">
+          <span class="close">&times;</span>
+          <img class="modal-content" id="img01" src="{{ url_for('static', filename='uploads/' + data.foto) }}" alt="foto de la mascota" width="800" height="600">
+        </div>
+        
+      </td>
+    </tr>
+    </table>
+</div>
+<a href="{{ url_for('listado') }}">Volver</a>
+{% endblock %}
+{% block javascript %}
+<script lang="javascript" src="{{ url_for('static', filename='/js/modal.js') }}"></script>
+{% endblock %}
