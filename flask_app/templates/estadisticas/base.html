@@ -3,23 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <title>{% block title %}{% endblock %}</title>
-    {% block css %}
+    {% block css %}{% endblock %}
     <link
       rel="stylesheet"
-      type="text/css"
       href="{{ url_for('static', filename='css/general.css') }}"
     />
     <link
       rel="stylesheet"
       type="text/css"
-      href="{{ url_for('static', filename='css/tablas.css') }}"
+      href="{{ url_for('static', filename='css/estadisticas.css') }}"
     />
-    <link 
-      rel="stylesheet" 
-      type="text/css" 
-      href="{{ url_for('static', filename='css/informacion_adopcion.css') }}"
-    />
-    {% endblock %}
   </head>
   <body>
     {% block content %}{% endblock %} {% block javascript %}{% endblock %}

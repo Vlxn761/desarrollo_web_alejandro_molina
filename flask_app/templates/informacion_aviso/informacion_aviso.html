@@ -1,6 +1,22 @@
-{% extends 'portada/base.html' %}
+{% extends 'informacion_aviso/base.html' %}
 {% block title %} Información de aviso {% endblock %}
-{% block css %}{% endblock %}
+{% block css %}
+<link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/general.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/tablas.css') }}"
+    />
+    <link 
+      rel="stylesheet" 
+      type="text/css" 
+      href="{{ url_for('static', filename='css/informacion_adopcion.css') }}"
+    />
+{% endblock %}
 {% block content %}
 <div class="lugar">
     <table>
@@ -74,34 +90,15 @@
       <td>{{data.unidad}}</td>
     </tr>
     <tr>
-      <td>Fotos</td>
-          <tr>
       <td>Foto</td>
       <td>
         <img id="foto" 
              src="{{ url_for('static', filename='uploads/' + data.foto) }}" 
-             alt="Foto mascota" 
-             onclick="mostrarFoto(this)">
-        <div id="emergente" class="emergente">
-          <button id="cerrar" class="cerrar">Cerrar</button>
-          <img id="emergente-img" class="emergente-img" src="" alt="Imagen ampliada">
-        </div>
-      </td>
-    </tr>
-
-      <td>
-        <img id="myImg" src="{{ url_for('static', filename='uploads/' + data.foto) }}" alt="foto de la mascota" width="320" height="240">
-        <div id="myModal" class="modal">
-          <span class="close">&times;</span>
-          <img class="modal-content" id="img01" src="{{ url_for('static', filename='uploads/' + data.foto) }}" alt="foto de la mascota" width="800" height="600">
-        </div>
-        
-      </td>
+             alt="Foto mascota">
     </tr>
     </table>
 </div>
 <a href="{{ url_for('listado') }}">Volver</a>
 {% endblock %}
 {% block javascript %}
-<script lang="javascript" src="{{ url_for('static', filename='/js/modal.js') }}"></script>
 {% endblock %}

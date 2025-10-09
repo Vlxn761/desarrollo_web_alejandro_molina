@@ -37,7 +37,7 @@ def agregar_aviso():
         fotos = request.files.getlist("foto")
         descripcion = request.form.get("descripcion")
         
-        validate, errors = validate_aviso(region, comuna, sector, nombre, email, tipo, cantidad, edad, unidad_medida, fecha, fotos)
+        validate = validate_aviso(region, comuna, sector, nombre, email, tipo, cantidad, edad, unidad_medida, fecha, fotos)
 
         if validate:
             aviso_id = db.create_aviso(comuna,
@@ -133,7 +133,7 @@ def informacion_aviso(id):
         "cantidad": aviso.cantidad,
         "edad": aviso.edad,
         "unidad": aviso.unidad_medida,
-        "foto": foto.ruta_archivo
+        "foto": foto.nombre_archivo
     }
     
     if data is None:
@@ -144,7 +144,7 @@ def informacion_aviso(id):
 @app.route("/estadisticas", methods=["GET", "POST"])
 def estadisticas():
     if request.method == "GET":
-        return render_template("estadisticas.html")
+        return render_template("estadisticas/estadisticas.html")
 
 @app.route("/", methods=["GET"])
 def index():

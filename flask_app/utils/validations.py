@@ -137,55 +137,42 @@ def validate_fotos(fotos):
 
 
 def validate_aviso(region, comuna, sector, nombre, email, tipo, cantidad, edad, unidad, fecha, fotos):
-    errors = {}
     validate = True
 
     if not validate_region(region):
-        errors["region"] = "La región no es válida."
         validate = False
 
     if not validate_comuna(comuna):
-        errors["comuna"] = "La comuna no es válida."
         validate = False
 
     if validate_region(region) and validate_comuna(comuna) and not validate_lugar(comuna, region):
-        errors["lugar"] = "La comuna no pertenece a la región seleccionada."
         validate = False
 
     if not validate_sector(sector):
-        errors["sector"] = "El sector no puede tener más de 100 caracteres."
         validate = False
 
     if not validate_nombre(nombre):
-        errors["nombre"] = "El nombre debe tener entre 3 y 200 caracteres."
         validate = False
 
     if not validate_email(email):
-        errors["email"] = "El email no es válido o es demasiado largo."
         validate = False
 
     if not validate_tipo(tipo):
-        errors["tipo"] = "El tipo debe ser 'perro' o 'gato'."
         validate = False
 
     if not validate_cantidad(cantidad):
-        errors["cantidad"] = "La cantidad debe ser un número entero mayor que 0."
         validate = False
 
     if not validate_edad(edad):
-        errors["edad"] = "La edad debe ser un número entero mayor que 0."
         validate = False
 
     if not validate_unidad_medida(unidad):
-        errors["uni_medida"] = "La unidad de medida debe ser 'a', 'm', 'años' o 'meses'."
         validate = False
 
     if not validate_fecha(fecha):
-        errors["fecha_dispo"] = "La fecha de disponibilidad no es válida o está en el pasado."
         validate = False
 
     if not validate_fotos(fotos):
-        errors["fotos"] = "Debes subir entre 1 y 5 fotos válidas (png, jpg, jpeg, gif)."
         validate = False
 
-    return validate, errors
+    return validate
