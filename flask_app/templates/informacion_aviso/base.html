@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>{% block title %}{% endblock %}</title>
+    {% block css %}
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/general.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/tablas.css') }}"
+    />
+    <link 
+      rel="stylesheet" 
+      type="text/css" 
+      href="{{ url_for('static', filename='css/informacion_adopcion.css') }}"
+    />
+    {% endblock %}
+  </head>
+  <body>
+    {% block content %}{% endblock %} {% block javascript %}{% endblock %}
+  </body>
+</html>

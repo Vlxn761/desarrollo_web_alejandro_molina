@@ -1,0 +1,104 @@
+{% extends 'informacion_aviso/base.html' %}
+{% block title %} Información de aviso {% endblock %}
+{% block css %}
+<link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/general.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/tablas.css') }}"
+    />
+    <link 
+      rel="stylesheet" 
+      type="text/css" 
+      href="{{ url_for('static', filename='css/informacion_adopcion.css') }}"
+    />
+{% endblock %}
+{% block content %}
+<div class="lugar">
+    <table>
+    <tr>
+      <th>LUGAR</th>
+      <th></th>
+    </tr>
+    <tr>
+      <td>Región</td>
+      <td>{{data.region}}</td>
+    </tr>
+    <tr>
+      <td>Comuna</td>
+      <td>{{data.comuna}}</td>
+    </tr>
+    <tr>
+      <td>Sector</td>
+      <td>{{data.sector}}</td>
+    </tr>
+    </table>
+</div>    
+<div class="contacto">
+    <table>
+    <tr>
+      <th>CONTACTO</th>
+      <th></th>
+    </tr>
+    <tr>
+      <td>Nombre</td>
+      <td>{{data.nombre}}</td>
+    </tr>
+    <tr>
+      <td>Email</td>
+      <td>{{data.email}}</td>
+    </tr>
+    <tr>
+      <td>Celular</td>
+      <td>{{data.celular}}</td>
+    </tr>
+    <tr>
+        <td>Contactar por</td>
+        <td>
+        {% for c in data.contacto %}
+            {{ c.nombre }}:
+            {{ c.identificador }} <br>
+        {% endfor %}
+        </td>
+    </tr>
+    </table>
+</div>
+<div id="info">
+    <table>
+    <tr>
+      <th>INFORMACIÓN</th>
+      <th></th>
+    </tr>
+    <tr>
+      <td>Tipo de mascota</td>
+      <td>{{data.tipo}}</td>
+    </tr>
+    <tr>
+      <td>Cantidad</td>
+      <td>{{data.cantidad}}</td>
+    </tr>
+    <tr>
+      <td>Edad</td>
+      <td>{{data.edad}}</td>
+    </tr>
+    <tr>
+      <td>Unidad de medida</td>
+      <td>{{data.unidad}}</td>
+    </tr>
+    <tr>
+      <td>Foto</td>
+      <td>
+        <img id="foto" 
+             src="{{ url_for('static', filename='uploads/' + data.foto) }}" 
+             alt="Foto mascota">
+    </tr>
+    </table>
+</div>
+<a href="{{ url_for('listado') }}">Volver</a>
+{% endblock %}
+{% block javascript %}
+{% endblock %}

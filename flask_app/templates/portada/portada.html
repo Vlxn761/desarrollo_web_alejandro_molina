@@ -1,0 +1,58 @@
+{% extends 'portada/base.html' %}
+{% block title %} Adopciones Nina {% endblock %}
+{% block css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/portada.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/tablas.css') }}"
+/>
+{% endblock %}
+{% block content %}
+<div class="title">
+  <h1 id="bienvenida">Bienvenid@ a Adopciones Nina</h1>
+</div>
+<div class="botones">
+  <a href="{{ url_for('agregar_aviso') }}" id="agregar-aviso">
+    Agregar aviso
+  </a>
+  <a href="{{ url_for('listado') }}" id="listado">
+    Listado de adopciones
+  </a>
+  <a href="{{ url_for('estadisticas') }}" id="estadisticas">
+    Estadísticas
+  </a>
+</div>
+<h2>Avisos recientes</h2>
+<div class="avisos">
+  {% if data %}
+  <table class="tabla-avisos">
+    <tr>
+      <th>Fecha publicación</th>
+      <th>Comuna</th>
+      <th>Sector</th>
+      <th>Catidad Tipo Edad</th>
+      <th>Foto</th>
+    </tr>
+    {% for aviso in data%}
+    <tr>
+      <td>{{aviso.fecha}}</td>
+      <td>{{aviso.comuna}}</td>
+      <td>{{aviso.sector}}</td>
+      <td>{{aviso.detalles}}</td>
+      <td>
+        <img src="{{aviso.ruta_imagen}}" alt="{{aviso.detalles}}" width="200" height="125">
+      </td>
+    </tr>
+    {% endfor%}
+  </table>
+  {% else %}
+    <p>Actualmente no hay avisos publicados</p>
+  {% endif %}
+</div>
+{% endblock %}
+{% block javascript %}
+<script lang="javascript" src="{{ url_for('static', filename='js/portada.js') }}"></script>
+{% endblock %}

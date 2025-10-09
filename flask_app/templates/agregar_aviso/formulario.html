@@ -1,0 +1,77 @@
+{% extends 'agregar_aviso/base.html' %}
+{% block title %} Formulario {% endblock %}
+{% block css %}{% endblock %}
+{% block content %}
+<div id="val-box" hidden>
+    <h2 id="val-msg"></h2>
+    <ul id="val-list"></ul>
+</div>
+<form name="myForm" id="myForm" method="post" enctype="multipart/form-data">
+    <div class="lugar">
+        <label for="select-region">Región</label>
+        <select name="select-region" id="select-region" required>
+            <option value="">Seleccione una región</option>
+        </select><br>
+
+        <label for="select-comuna">Comuna</label>
+        <select name="select-comuna" id="select-comuna" required>
+            <option value="">Seleccione una comuna</option>
+        </select><br>
+
+        <label for="sector">Sector</label>
+            <input type="text" name="sector" id="sector" maxlength="100"><br>
+    </div>    
+    <div class="contacto">
+        <label for="nombre">Nombre</label>
+        <input type="text" name="nombre" id="nombre" minlength="3" maxlength="200"><br>
+
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" maxlength="100" required><br>
+
+        <label for="tel">Celular</label>
+        <input type="tel" name="tel" id="tel"><br>
+
+        <div id="redes"></div>
+        <button type="button" id="agregar-contacto">+</button>
+    </div>
+    <div id="info">
+        <label for="select-mascota">Tipo de mascota</label>
+        <select name="select-mascota" id="select-mascota" required>
+            <option value="">Seleccione un tipo</option>
+        </select><br>
+
+        <label for="cantidad">Cantidad</label>
+        <input type="number" name="cantidad" id="cantidad" min="1" required><br>
+
+        <label for="edad">Edad</label>
+        <input type="number" name="edad" id="edad" min="1" required><br>
+
+        <label for="select-unidad">Unidad de medida de edad</label>
+        <select name="select-unidad" id="select-unidad" required>
+            <option value="">Seleccione una opción</option>
+        </select><br>
+
+        <label for="fecha">Fecha de entrega</label>
+        <input type="datetime-local" name="fecha" id="fecha"><br>
+
+        <label for="descripcion">Descripción</label>
+        <textarea name="descripcion" id="descripcion" rows="10" cols="50"></textarea><br>
+        <div id="imagenes">
+            <label for="fotos">Fotos</label>
+            <input type="file" name="foto" id="foto"><br>
+        </div>
+            
+        <button type="button" id="agregar-foto">+</button>
+    </div>
+    <div>
+        <button type="sumbit" id="envio">
+            Agregar aviso
+        </button>
+    </div>
+    <button onclick="window.location.href='index.html'">Volver</button>
+</form>
+{% endblock %}
+{% block javascript %}
+<script lang="javascript" src="{{ url_for('static', filename='/js/select.js') }}"></script>
+<script lang="javascript" src="{{ url_for('static', filename='/js/validation.js') }}"></script>
+{% endblock %}
