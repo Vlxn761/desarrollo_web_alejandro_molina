@@ -196,28 +196,12 @@ const validateForm = () => {
       validationBox.hidden = true;
     });
 
-    submitButton.addEventListener("click", () => {
-      submitButton.style.display = "none";
-      backButton.style.display = "none"
-
-      validationMessageElem.innerText = "Hemos recibido la información de adopción, muchas gracias y suerte!";
-      
-      let portadaButton = document.createElement("button");
-      portadaButton.innerText = "Volver a la portada";
-
-      portadaButton.addEventListener("click", () => {
-       window.location.href = "../html/index.html";
-      });
-
-      validationListElem.appendChild(portadaButton);
-    });
+    submitButton.addEventListener("click", () => myForm.submit());
 
     validationListElem.appendChild(submitButton);
     validationListElem.appendChild(backButton);
 
     validationBox.hidden = false;
-
-    myForm.submit();
   }
 };
 

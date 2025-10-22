@@ -64,8 +64,8 @@ def agregar_aviso():
 
                 foto.save(os.path.join(app.config["UPLOAD_FOLDER"], img_filename))
                 db.create_foto(aviso_id, img_filename)
-            
-        return redirect(url_for("index"))
+
+            return redirect(url_for("index"))
 
     elif request.method == "GET":
         return render_template("agregar_aviso/formulario.html")

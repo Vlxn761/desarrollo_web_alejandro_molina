@@ -75,6 +75,7 @@ const validateDate = (fecha) => {
   let fechaInput = new Date(fecha); 
   let fechaPrellenada = new Date();
   fechaPrellenada.setHours(fechaPrellenada.getHours() + 3);
+  fechaInput.setMinutes(fechaInput.getMinutes() + 10);
 
   return fechaInput >= fechaPrellenada;
 };
@@ -188,6 +189,7 @@ const validateForm = () => {
     let submitButton = document.createElement("button");
     submitButton.innerText = "Enviar";
     submitButton.style.marginRight = "10px";
+    submitButton.type = "button";
 
     let backButton = document.createElement("button");
     backButton.innerText = "Volver";
@@ -195,6 +197,7 @@ const validateForm = () => {
       myForm.style.display = "block";
       validationBox.hidden = true;
     });
+    backButton.type = "button";
 
     submitButton.addEventListener("click", () => {
       submitButton.style.display = "none";

@@ -1,7 +1,7 @@
 import re
 import filetype
 import database.db as db
-import datetime
+from datetime import datetime, timedelta
 
 def validate_region(region):
     region = db.get_region_by_name(region)
@@ -19,7 +19,7 @@ def validate_lugar(comuna_nombre, region_nombre):
     if validate_comuna(comuna_nombre) and validate_region(region_nombre):
         comuna = db.get_comuna_by_name(comuna_nombre)
         region = db.get_region_by_name(region_nombre)
-        region2 = db.get_region_by_id(comuna.id)
+        region2 = db.get_region_by_id(comuna.region_id)
         if region2:
             return region2.id == region.id
     return False
@@ -49,8 +49,7 @@ def validate_celular(celular):
 
 def validate_red(red):
     if red:
-        if red in ["Whatsapp", "Telegram", "Instagram", "X", "TikTok", "Otra"]:
-            return True
+        return red in ["Whatsapp", "Telegram", "Instagram", "X", "TikTok", "Otra"]
     return False
 
 def validate_redes(redes):
@@ -72,38 +71,33 @@ def validate_identificadores(identificadores):
 
 def validate_tipo(tipo): 
     if tipo:
-        if tipo in ["Perro", "Gato"]:
-            return True
+        return tipo in ["Perro", "Gato"]
     return False
 
 def validate_cantidad(cantidad):
     if cantidad:
-        if cantidad.isdigit() and int(cantidad) > 0:
-            return True
+        return cantidad.isdigit() and int(cantidad) > 0
     return False
 
 def validate_edad(edad):
     if edad:
-        if edad.isdigit() and int(edad) > 0:
-            return True
+        return edad.isdigit() and int(edad) > 0            
     return False
 
 def validate_unidad_medida(unidad):
     if unidad:
-        if unidad in ["Meses", "Años"]:
-            return True
+        return unidad in ["m", "a"]
     return False
 
 def validate_fecha(fecha):
     if fecha:
         pattern = re.compile(
-            r'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) '
-            r'([01]\d|2[0-3]):[0-5]\d:[0-5]\d$'
+            r'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-3]):[0-5]\d$'
         )
         if bool(pattern.match(fecha)):
-            fecha_dt = datetime.strptime(fecha, "%Y-%m-%d %H:%M:%S")
-            fecha_default = datetime.now() + datetime.timedelta(hours=3)
-            return fecha_dt > fecha_default
+            fecha_dt = datetime.strptime(fecha, "%Y-%m-%dT%H:%M")
+            fecha_default = datetime.now() + timedelta(hours=2, minutes=55)
+            return fecha_dt >= fecha_default
     return False
 
 def validate_foto(img):
@@ -145,7 +139,7 @@ def validate_aviso(region, comuna, sector, nombre, email, tipo, cantidad, edad, 
     if not validate_comuna(comuna):
         validate = False
 
-    if validate_region(region) and validate_comuna(comuna) and not validate_lugar(comuna, region):
+    if not validate_lugar(comuna, region):
         validate = False
 
     if not validate_sector(sector):
