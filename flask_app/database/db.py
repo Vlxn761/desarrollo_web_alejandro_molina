@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, BigInteger, String, ForeignKey, DateTime, Enum, Text
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship, backref, joinedload
 from datetime import datetime
+from numpy import ceil
 
 DB_NAME = "tarea2"
 DB_USERNAME = "cc5002"
@@ -15,7 +16,7 @@ SessionLocal = sessionmaker(bind=engine)
 
 Base = declarative_base()
 
-# --- Models ---
+# --- Modelos ---
 
 class AvisoAdopcion(Base):
     __tablename__ = 'aviso_adopcion'
@@ -37,6 +38,7 @@ class AvisoAdopcion(Base):
     comuna = relationship("Comuna", back_populates="avisos_adopcion")
     contactos = relationship("ContactarPor", back_populates="aviso")
     fotos = relationship("Foto", back_populates="aviso")
+    comentarios = relationship("Comentario", back_populates="aviso")
 
 class Comuna(Base):
     __tablename__ = 'comuna'
@@ -76,8 +78,21 @@ class Region(Base):
 
     comunas = relationship("Comuna", back_populates="region")
 
+class Comentario(Base):
+    __tablename__ = 'comentario'
 
-# --- Database Functions ---
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nombre = Column(String(80), nullable=False)
+    texto = Column(String(300), nullable=False)
+    fecha = Column(DateTime, nullable=False)
+    aviso_id = Column(Integer, ForeignKey('aviso_adopcion.id'), nullable=False)
+
+    aviso = relationship("AvisoAdopcion", back_populates="comentarios")
+
+
+# --- Obtener datos ---
+
+# Avisos
 def get_avisos():
     session = SessionLocal()
     avisos = session.query(AvisoAdopcion).order_by(AvisoAdopcion.id.desc())
@@ -96,19 +111,56 @@ def get_avisos_recientes(max):
     session.close()
     return avisos
 
-
 def get_paginated_avisos(offset):
     session = SessionLocal()
-    avisos = session.query(AvisoAdopcion).options(
-        joinedload(AvisoAdopcion.comuna),
-        joinedload(AvisoAdopcion.fotos),
-        joinedload(AvisoAdopcion.contactos)).order_by(AvisoAdopcion.id.desc())
-
-    paginas = avisos.count()
+    avisos = session.query(AvisoAdopcion).order_by(AvisoAdopcion.fecha_ingreso.desc())
+    paginas = int(ceil(avisos.count()/5))
     avisos = avisos.offset(offset).limit(5).all()
     session.close()
     return avisos, paginas
 
+def get_avisos_diarios():
+    session = SessionLocal()
+    cursor = session.query(AvisoAdopcion.fecha_ingreso, AvisoAdopcion.id).all()
+    avisos = {}
+    for fecha_ingreso, id in cursor:
+          fecha = fecha_ingreso.date()
+          if fecha not in avisos:
+              avisos[fecha] = 0
+          avisos[fecha] += 1
+    session.close()
+    return avisos
+
+def get_avisos_tipo():
+    session = SessionLocal()
+    cursor = session.query(AvisoAdopcion.tipo, AvisoAdopcion.id).all()
+    avisos = {}
+    for tipo, id in cursor:
+          if tipo not in avisos:
+              avisos[tipo] = 0
+          avisos[tipo] += 1
+    session.close()
+    return avisos
+
+def get_avisos_mes():
+    session = SessionLocal()
+    cursor = session.query(AvisoAdopcion.tipo, AvisoAdopcion.id, AvisoAdopcion.fecha_ingreso).all()
+    avisos = list(range(12))
+
+    for i in range(12):
+        avisos[i] = {"Perros": 0, "Gatos": 0}
+
+    for tipo, id, fecha_ingreso in cursor:
+          mes = fecha_ingreso.month-1
+          if tipo == "perro":
+              avisos[mes]["Perros"] += 1
+          else:
+              avisos[mes]["Gatos"] += 1
+
+    session.close()
+    return avisos
+
+# Fotos
 def get_foto_by_aviso(aviso_id, cantidad):
     session = SessionLocal()
     foto = session.query(Foto).filter_by(aviso_id=aviso_id).limit(cantidad).all()
@@ -121,6 +173,7 @@ def get_fotos_by_aviso(aviso_id):
     session.close()
     return foto
 
+# Comunas
 def get_comuna_by_id(id):
     session = SessionLocal()
     comuna = session.query(Comuna).filter_by(id=id).first()
@@ -133,6 +186,7 @@ def get_comuna_by_name(name):
     session.close()
     return comuna
 
+# Regiones
 def get_region_by_id(id):
     session = SessionLocal()
     region = session.query(Region).filter_by(id=id).first()
@@ -145,11 +199,22 @@ def get_region_by_name(name):
     session.close()
     return region
 
+# Contactos
 def get_contactos_by_aviso(aviso_id):
     session = SessionLocal()
     contacto = session.query(ContactarPor).filter_by(aviso_id=aviso_id).all()
     session.close()
     return contacto
+
+# Comentarios
+
+def get_comentarios_by_aviso(aviso_id):
+    session = SessionLocal()
+    comentario = session.query(Comentario).filter_by(aviso_id=aviso_id).all()
+    session.close()
+    return comentario
+
+# --- Agrgegar datos ---
 
 def create_aviso(comuna, sector, nombre, email, celular, tipo, cantidad, edad, unidad_medida, fecha, descripcion):
     session = SessionLocal()
@@ -187,85 +252,9 @@ def create_foto(aviso_id, filename):
     session.commit()
     session.close()
 
-
-def get_user_by_id(id):
+def create_comentario(aviso_id, nombre, texto):
     session = SessionLocal()
-    user = session.query(Usuario).filter_by(id=id).first()
-    session.close()
-    return user
-
-def get_user_by_id(id):
-    session = SessionLocal()
-    user = session.query(Usuario).filter_by(id=id).first()
-    session.close()
-    return user
-
-def get_user_by_email(email):
-    session = SessionLocal()
-    user = session.query(Usuario).filter_by(email=email).first()
-    session.close()
-    return user
-
-def get_user_by_username(username):
-    session = SessionLocal()
-    user = session.query(Usuario).filter_by(username=username).first()
-    session.close()
-    return user
-
-def create_user(username, password, email):
-    session = SessionLocal()
-    new_user = Usuario(username=username, password=password, email=email)
-    session.add(new_user)
+    new_comentario = Comentario(aviso_id=aviso_id, nombre=nombre, texto=texto, fecha=datetime.now())
+    session.add(new_comentario)
     session.commit()
     session.close()
-
-def get_confessions(page_size):
-    session = SessionLocal()
-    confesiones = session.query(Confesion).limit(page_size).all()
-    session.close()
-    return confesiones
-
-def create_confession(conf_title, conf_text, conf_img, user_id):
-    session = SessionLocal()
-    new_confession = Confesion(conf_title=conf_title,conf_text=conf_text, conf_img=conf_img, user_id=user_id)
-    session.add(new_confession)
-    session.commit()
-    session.close()
-
-def change_profile_picture(username, new_img):
-    session = SessionLocal()
-    user = session.query(Usuario).filter_by(username=username).first()
-    if user:
-        user.profile_image = new_img
-        session.commit()
-    session.close()
-
-def get_profile_picture(username):
-    session = SessionLocal()
-    user = session.query(Usuario).filter_by(username=username).first()
-    if user:
-        profile_image = user.profile_image
-    else:
-        profile_image = None
-    session.close()
-    return profile_image
-
-def register_user(username, password, email):
-    if get_user_by_email(email) is not None:
-        return False, "El correo ya esta en uso."
-    
-    if get_user_by_username(username) is not None:
-        return False, "El nombre de usuario esta en uso."
-    
-    create_user(username, password, email)
-    return True, None
-
-def login_user(username, password):
-    a_user = get_user_by_username(username)
-    if a_user is None:
-        return False, "Usuario o contraseña incorrectos."
-    
-    if a_user.password != password:
-        return False, "Usuario o contraseña incorrectos."
-    
-    return True, None
