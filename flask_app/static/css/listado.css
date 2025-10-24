@@ -3,3 +3,8 @@ tr:hover {
   transition: background-color 0.3s ease; 
   cursor: pointer;
 }
+
+.paginas {
+  margin: 0 auto;
+  text-align: center;
+}

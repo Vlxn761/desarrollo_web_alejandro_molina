@@ -1,0 +1,29 @@
+img {
+      width: 320px;
+      height: 240px;
+      cursor: pointer;
+      margin: 10px;
+      border-radius: 6px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #000;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.imagen-modal {
+  width: 800px;
+  height: 600px;
+  box-shadow: 0 0 10px #000;
+}
+
+.boton-cerrar {
+  padding: 6px 12px;
+  font-size: 16px;
+  cursor: pointer;
+}

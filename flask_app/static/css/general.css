@@ -28,6 +28,7 @@ a {
   border-radius: 4px;
   margin-bottom: 10px;
   cursor: pointer;
+  font-size: 0.98rem;
 }
 
 a:hover {
@@ -42,6 +43,7 @@ button {
   border-radius: 4px;
   margin-bottom: 10px;
   cursor: pointer;
+  font-size: 0.98rem;              
 }
 
 button:hover {

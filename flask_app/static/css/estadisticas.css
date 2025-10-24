@@ -3,3 +3,8 @@ img {
   height: auto;
   border-radius: 6px;
 }
+
+.stats-container {
+  width: 80%;
+  margin: auto;
+}
