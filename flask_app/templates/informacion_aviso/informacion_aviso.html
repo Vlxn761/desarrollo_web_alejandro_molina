@@ -1,7 +1,7 @@
 {% extends 'informacion_aviso/base.html' %}
 {% block title %} Información de aviso {% endblock %}
 {% block css %}
-<link
+    <link
       rel="stylesheet"
       type="text/css"
       href="{{ url_for('static', filename='css/general.css') }}"
@@ -14,10 +14,16 @@
     <link 
       rel="stylesheet" 
       type="text/css" 
-      href="{{ url_for('static', filename='css/informacion_adopcion.css') }}"
+      href="{{ url_for('static', filename='css/comentarios.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/modal.css') }}"
     />
 {% endblock %}
 {% block content %}
+{% if data %}
 <div class="lugar">
     <table>
     <tr>
@@ -90,15 +96,50 @@
       <td>{{data.unidad}}</td>
     </tr>
     <tr>
-      <td>Foto</td>
+      <td>Fotos</td>
       <td>
-        <img id="foto" 
-             src="{{ url_for('static', filename='uploads/' + data.foto) }}" 
-             alt="Foto mascota">
+      {% for foto in data.foto %}
+        <img src="{{ url_for('static', filename='uploads/' + foto.nombre_archivo) }}" 
+             alt="Foto mascota"
+             onclick="abrir(this)">
+        <br>
+      {% endfor %}
+      </td>
     </tr>
     </table>
+</div>
+<div id="modal" class="modal">
+    <img id="imagen-modal" class="imagen-modal" alt="Foo mascota extendida">
+    <button class="boton-cerrar" onclick="cerrarModal()">Cerrar</button>
+</div>
+{% endif %}
+{% if error %}
+<h1>{{ error }}</h1>
+{% endif %}
+<div class="caja-comentarios">
+  <div id="comentarios" class="comentarios">
+  </div>
+  <div id="form-comentario" class="form-comentario">
+    <div id="val-box" hidden>
+      <h2 id="val-msg"></h2>
+      <ul id="val-list"></ul>
+    </div>
+    <p class="agregar-comentario">Escribe un comentario</p>
+    <form name="form" id="form" method="post" enctype="multipart/form-data">
+      <label for="nombre">Nombre</label>
+      <input type="text" name="nombre" id="nombre" minlength="3" maxlength="200"><br>
+
+      <label for="texto">Comentario</label>
+      <textarea name="texto" id="texto" rows="4" cols="50"></textarea><br>
+
+      <button type="button" id="envio" onclick='agregarComentario({{ data.id }})'>Agregar comentario</button>
+    </form>
+  </div>
 </div>
 <a href="{{ url_for('listado') }}">Volver</a>
 {% endblock %}
 {% block javascript %}
+<script src="{{ url_for('static', filename='/js/comments.js') }}"></script>
+<script src="{{ url_for('static', filename='/js/modal.js') }}"></script>
+<script>window.onload = cargarComentarios({{ data.id }});</script>
 {% endblock %}
