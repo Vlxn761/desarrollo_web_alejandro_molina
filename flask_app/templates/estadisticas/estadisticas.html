@@ -4,10 +4,23 @@
 {% block content %}
 <h1>Estadísticas</h1>
 
-<img src="{{ url_for('static', filename='/svg/grafico1.png') }}" alt="Avisos de adopción por día" width="300"><br>
-<img src="{{ url_for('static', filename='/svg/grafico2.png') }}" alt="Total de avisos por mascota" width="300"><br>
-<img src="{{ url_for('static', filename='/svg/grafico3.png') }}" alt="Avisos de adopción por mes" width="300"><br>
+<div class="stats-container">
+    <figure class="highcharts-figure">
+        <div id="grafico-lineas"></div>
+    </figure>
+
+    <figure class="highcharts-figure">
+        <div id="grafico-torta"></div>
+    </figure>
+
+    <figure class="highcharts-figure">
+        <div id="grafico-barra"></div>
+    </figure>
+</div>
 
 <a href="{{ url_for('index') }}">Volver</a>
 {% endblock %}
-{% block javascript %}{% endblock %}
+{% block javascript %}
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="{{url_for('static', filename='js/stats.js')}}"></script>
+{% endblock %}
