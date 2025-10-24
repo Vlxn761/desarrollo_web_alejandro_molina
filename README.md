@@ -1,7 +1,6 @@
-# Tarea 1 - Desarrollo Web
+# Tarea 3 - Desarrollo Web
    
-   ## Aclaración
-   Por un fallo de ultima hora no se pudo realizar el ultimo push a tiempo y se envió el zip como respaldo, por lo mismo este ultimo push se realizó fuera de plazo, pero se envió apenas se resolvió el problema, sin realizar cambios en la tarea
-   
-   ## Descripción
-   Esta tarea incluye la implementación de una aplicación web usando Flask, MySQL y SQLAlchemy.
+   ## Decisiones tomadas
+   - Hay un elemento **img** sin **src** en **informacion_aviso.html** que arroja error al validar el HTML, esto es intencional, ya que se usa para la implementación del modal. 
+   - Para graficar las estadisticas se utilizó Highcharts.
+   - Se utilizó un archivo vacío para poder agregar la carpeta uploads manualmente al repositorio.
