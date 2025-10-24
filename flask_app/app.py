@@ -1,5 +1,6 @@
-from flask import Flask, request, render_template, redirect, url_for, session
-from utils.validations import validate_aviso
+from flask import Flask, request, render_template, redirect, url_for, session, jsonify
+from flask_cors import cross_origin
+from utils.validations import validate_aviso, validate_comentario
 from database import db
 from werkzeug.utils import secure_filename
 import hashlib
@@ -14,7 +15,7 @@ app.secret_key = "secret_key"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
 
-# --- Auth routes ---
+# --- Agregar aviso ---
 
 @app.route("/agregar", methods=["GET", "POST"])
 def agregar_aviso():
@@ -70,7 +71,8 @@ def agregar_aviso():
     elif request.method == "GET":
         return render_template("agregar_aviso/formulario.html")
     
-    
+# --- Listado de adopciones ---
+
 @app.route("/adopciones", methods=["GET"])
 def listado():
     if request.method == "GET":
@@ -108,20 +110,31 @@ def listado():
             })
 
         return render_template("listado/listado.html", data = data, page=pagina, total = total)
-    
-@app.route("/info/<int:id>")
-def informacion_aviso(id):
 
+# --- Aviso detallado ---
+
+@app.route("/info/<int:id>", methods=["GET"])
+@cross_origin(origin="127.0.0.1", supports_credentials=True)
+def informacion_aviso(id):
     aviso = db.get_aviso_by_id(id)
-    
+
     comuna = db.get_comuna_by_id(aviso.comuna_id)
     region = db.get_region_by_id(comuna.region_id)
 
     contacto = db.get_contactos_by_aviso(aviso.id)
 
-    foto = db.get_foto_by_aviso(aviso.id, 1)[0]
+    fotos = db.get_foto_by_aviso(aviso.id, 5)
+
+    unidad_medida = "Meses"
+    if aviso.unidad_medida == "a":
+        unidad_medida = "Años"    
+
+    tipo = "Gato"
+    if aviso.tipo == "perro":
+        tipo = "Perro"    
 
     data = {
+        "id": id,
         "region": region.nombre,
         "comuna": comuna.nombre,
         "sector": aviso.sector,
@@ -129,22 +142,108 @@ def informacion_aviso(id):
         "email": aviso.email,
         "celular": aviso.celular,
         "contacto": contacto,
-        "tipo": aviso.tipo,
+        "tipo": tipo,
         "cantidad": aviso.cantidad,
         "edad": aviso.edad,
-        "unidad": aviso.unidad_medida,
-        "foto": foto.nombre_archivo
+        "unidad": unidad_medida,
+        "foto": fotos
     }
-    
+
+    comentarios = db.get_comentarios_by_aviso(id)
+    data_comentarios = []
+
+    for comentario in comentarios:
+        data_comentarios.append({
+            "nombre": comentario.nombre,
+            "fecha": comentario.fecha,
+            "texto": comentario.texto
+        })
+
     if data is None:
         return render_template("informacion_aviso/informacion_aviso.html", error="Aviso no encontrado")
-    return render_template("informacion_aviso/informacion_aviso.html", data=data)    
+
+
+    return render_template("informacion_aviso/informacion_aviso.html", data=data, comments=data_comentarios)    
+
+@app.route("/comentarios/<int:id>", methods=["GET", "POST"])
+@cross_origin(origin="127.0.0.1", supports_credentials=True)
+def comentarios_aviso(id):
+    if request.method == "POST":
+        form = request.get_json()
+        nombre = form["nombre"]
+        texto = form["texto"]
+        
+        validate = validate_comentario(nombre, texto)
+
+        if validate:
+            db.create_comentario(id, nombre, texto)
+            return jsonify({"status": "ok"})
+        else:
+            return jsonify({"status": "error", "data": "Comentario invalido"}), 400
+        
+    elif request.method == "GET":
+        comentarios = db.get_comentarios_by_aviso(id)
+
+        data = []
+
+        for comentario in comentarios:
+            data.append({
+                "nombre": comentario.nombre,
+                "texto": comentario.texto,
+                "fecha": comentario.fecha.strftime("%Y-%m-%d %H:%M")
+            })
     
-    
-@app.route("/estadisticas", methods=["GET", "POST"])
+        return jsonify(data)
+
+# --- Estadísticas ---
+
+@app.route("/estadisticas", methods=["GET"])
 def estadisticas():
-    if request.method == "GET":
-        return render_template("estadisticas/estadisticas.html")
+    return render_template("estadisticas/estadisticas.html")
+
+@app.route("/estadisticas-dia", methods=["GET"])
+@cross_origin(origin="127.0.0.1", supports_credentials=True)
+def obtener_datos_dia():
+    data = []
+    avisos = db.get_avisos_diarios()
+    for fecha in avisos:
+        data.append({
+            "fecha": fecha.strftime("%Y-%m-%d"),
+            "cantidad": avisos[fecha]
+        })
+    data.sort(key=lambda x: x["fecha"])
+
+    return jsonify(data)
+
+@app.route("/estadisticas-tipo", methods=["GET"])
+@cross_origin(origin="127.0.0.1", supports_credentials=True)
+def obtener_datos_tipo():
+    data = []
+    avisos = db.get_avisos_tipo()
+    for tipo in avisos:
+        data.append({
+            "tipo": tipo,
+            "cantidad": avisos[tipo]
+        })
+
+    return jsonify(data)
+
+@app.route("/estadisticas-mes", methods=["GET"])
+@cross_origin(origin="127.0.0.1", supports_credentials=True)
+def obtener_datos_mes():
+    dataPerros = list(range(12))
+    dataGatos = list(range(12))
+    avisos = db.get_avisos_mes()
+    for i in range(12):
+        dataPerros[i] = avisos[i]["Perros"]
+        dataGatos[i] = avisos[i]["Gatos"]
+
+    return jsonify({
+        "perros": dataPerros, 
+        "gatos": dataGatos
+        })
+
+# --- Index ---
 
 @app.route("/", methods=["GET"])
 def index():
