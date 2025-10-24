@@ -37,17 +37,21 @@
     </tr>
     {% endfor%}
   </table>
-  {% if page > 1 %}
-    <a href="{{ url_for('listado', page=page-1) }}">Anterior</a>
-  {% endif %}
-    <span>Página {{ page }} de {{ total }}</span>
-  {% if page < total %}
-    <a href="{{ url_for('listado', page=page+1) }}">Siguiente</a>
-  {% endif %}
+  <div class="paginas">
+    {% if page > 1 %}
+      <a href="{{ url_for('listado', page=page-1) }}">Anterior</a>
+    {% endif %}
+      <span>Página {{ page }} de {{ total }}</span>
+    {% if page < total %}
+      <a href="{{ url_for('listado', page=page+1) }}">Siguiente</a>
+      {% endif %}
 
-  {% else %}
-    <p>Actualmente no hay avisos publicados</p>
-  {% endif %}
+      {% else %}
+      <p>Actualmente no hay avisos publicados</p>
+    {% endif %}
+  </div>
+  <br>
+  <br>
   <a href="{{ url_for('index') }}">Volver</a>
 {% endblock %}
 {% block javascript %}{% endblock %}

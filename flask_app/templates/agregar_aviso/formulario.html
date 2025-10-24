@@ -57,7 +57,7 @@
         <label for="descripcion">Descripción</label>
         <textarea name="descripcion" id="descripcion" rows="10" cols="50"></textarea><br>
         <div id="imagenes">
-            <label for="fotos">Fotos</label>
+            <label for="foto">Fotos</label>
             <input type="file" name="foto" id="foto"><br>
         </div>
             
@@ -70,6 +70,6 @@
 </form>
 {% endblock %}
 {% block javascript %}
-<script lang="javascript" src="{{ url_for('static', filename='/js/select.js') }}"></script>
-<script lang="javascript" src="{{ url_for('static', filename='/js/validation.js') }}"></script>
+<script src="{{ url_for('static', filename='/js/select.js') }}"></script>
+<script src="{{ url_for('static', filename='/js/validation.js') }}"></script>
 {% endblock %}
