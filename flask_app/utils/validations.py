@@ -3,6 +3,18 @@ import filetype
 import database.db as db
 from datetime import datetime, timedelta
 
+def validate_texto(texto):
+    if texto:
+        if len(texto) >= 5:
+            return True
+    return False
+
+def validate_nombre_comentario(nombre):
+    if nombre:
+        if len(nombre) >= 3 and len(nombre) < 80:
+            return True
+    return False
+
 def validate_region(region):
     region = db.get_region_by_name(region)
     if region:
@@ -167,6 +179,17 @@ def validate_aviso(region, comuna, sector, nombre, email, tipo, cantidad, edad, 
         validate = False
 
     if not validate_fotos(fotos):
+        validate = False
+
+    return validate
+
+def validate_comentario(nombre, texto):
+    validate = True
+
+    if not validate_nombre_comentario(nombre):
+        validate = False
+
+    if not validate_texto(texto):
         validate = False
 
     return validate
