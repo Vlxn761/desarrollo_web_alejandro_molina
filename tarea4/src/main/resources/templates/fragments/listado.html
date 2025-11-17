@@ -1,0 +1,42 @@
+<div th:fragment="listado(avisos)" class="tabla-avisos">
+    <table class="tabla-avisos">
+      <tr>
+        <th>ID</th>
+        <th>Fecha Publicación</th>
+        <th>Sector</th>
+        <th>Cantidad Tipo Edad</th>
+        <th>Comuna</th>
+        <th>Nota</th>
+        <th></th>
+      </tr>
+      <tr th:each="aviso: ${avisos.getContent()}">
+        <td th:text="${aviso.id}"></td>
+        <td th:text="${aviso.fecha}"></td>
+        <td th:text="${aviso.sector}"></td>
+        <td th:text="${aviso.detalles}"></td>
+        <td th:text="${aviso.comuna}"></td>
+        <td th:text="${aviso.nota}"></td>
+        <td>
+          <a th:id="'a-' + ${aviso.id}" th:onclick="'mostrarOpciones(' + ${aviso.id} + ')'">Evaluar</a>
+          <div th:id="'form-' + ${aviso.id}" style="display:none;">
+            <span th:onclick="'evaluar(' + ${aviso.id} + ', 1)'">1</span>
+            <span th:onclick="'evaluar(' + ${aviso.id} + ', 2)'">2</span>
+            <span th:onclick="'evaluar(' + ${aviso.id} + ', 3)'">3</span>
+            <span th:onclick="'evaluar(' + ${aviso.id} + ', 4)'">4</span>
+            <span th:onclick="'evaluar(' + ${aviso.id} + ', 5)'">5</span>
+            <span th:onclick="'evaluar(' + ${aviso.id} + ', 6)'">6</span>
+            <span th:onclick="'evaluar(' + ${aviso.id} + ', 7)'">7</span>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <div>
+    <a th:if="${!avisos.first}"
+       th:href="@{/(page=${avisos.number - 1})}">Anterior</a>
+
+    <span>Página [[${avisos.number + 1}]] de [[${avisos.totalPages}]]</span>
+
+    <a th:if="${!avisos.last}"
+       th:href="@{/(page=${avisos.number + 1})}">Siguiente</a>
+    </div>
+</div>

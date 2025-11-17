@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>Adopciones Nina</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      th:href="@{/css/listado.css}"
+    >
+    <link
+      rel="stylesheet"
+      th:href="@{/css/tablas.css}"
+    >
+    <link
+      rel="stylesheet"
+      th:href="@{/css/general.css}"
+    >
+  </head>
+  <body>
+    <div class="title">
+      <h1 id="bienvenida">Bienvenid@ a Adopciones Nina</h1>
+    </div>
+    <h1>Listado de adopciones</h1>
+    <div th:if="${avisos != null}" th:replace="~{fragments/listado :: listado(${data})}"></div>
+
+    <script th:src="@{/js/evaluar.js}"></script>
+  </body>
+</html>
